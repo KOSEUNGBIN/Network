@@ -3,5 +3,5 @@ project(Netword)
 
 set(CMAKE_C_STANDARD 11)
 
-set(SOURCE_FILES week4/echo_server.c)
+set(SOURCE_FILES Assignments/week5/client.c)
 add_executable(Netword ${SOURCE_FILES})

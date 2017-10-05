@@ -9,16 +9,16 @@
 #include <string.h>
 #include <unistd.h>
 
+#define BUFFSIZE    2048
+#define OPSZ    4
+#define RLT_SIZE    4
 
 int main(int argc , char ** argv)
 {
     int serv_sock;
+    int result , opnd_cnt , i;
+    char opmsg[BUFFSIZE];
     struct sockaddr_in servaddr;
-
-    int cnt , i;
-    int * value , * result;
-    char operator;
-
     int send_len , receieve_len , receieve_cnt;
 
     if(argc != 3)
@@ -45,35 +45,28 @@ int main(int argc , char ** argv)
         fprintf(stderr , "Connection Error\n");
         exit(1);
     }
+    else
+        printf("Connected .......\n");
 
-    while(1)
+
+    fputs("Input Operand Count : " , stdout);
+    scanf("%d" , &opnd_cnt);
+    opmsg[0] = (char) opnd_cnt;
+
+    for(i = 0; i < opnd_cnt ; ++i)
     {
-        fputs("Input Operand Count (Q to quit): " , stdout);
-        fgets(&cnt , sizeof(cnt) , stdin);
-
-        if(cnt == (int)'q' || cnt == (int) 'Q')
-        {
-            break;
-        }
-
-        value = (int *) malloc(sizeof(int) * (cnt + 1));
-
-        for(i = 1; i <= cnt ; ++i)
-        {
-            printf("Operand %d : " , i);
-            scanf("%d" , &value[i - 1]);
-        }
-
-        printf("Operator : " );
-        scanf("%c" , &operator);
-
-        value[cnt] = (int) operator;
-
-        write(serv_sock , value , sizeof(value) * (cnt + 1));
-        read(serv_sock , result , sizeof(result));
-
-        printf("Message from server : %d\n" , *result);
+        printf("Operand %d : " , i + 1);
+        scanf("%d" , (int *) &opmsg[ i * OPSZ + 1]);
     }
+
+    fgetc(stdin);
+    fputs("Operator : " , stdout);
+    scanf("%c" , &opmsg[opnd_cnt * OPSZ + 1]);
+
+    write(serv_sock , opmsg , opnd_cnt * OPSZ + 2);
+    read(serv_sock , &result , RLT_SIZE);
+
+    printf("Operator result : %d \n" , result);
 
     close(serv_sock);
     return 0;
