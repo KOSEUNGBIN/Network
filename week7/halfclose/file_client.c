@@ -37,12 +37,12 @@ int main(int argc , char ** argv)
 
     connect(sd , (struct sockaddr *) &serv_adr , sizeof(serv_adr));
 
-    while(read(sd , (void *) buf , BUF_SIZE) != 0)
+    while( (read_cnt = read(sd , (void *) buf , BUF_SIZE)) > 0)
     {
-        fwrite((void *) buf , strlen(buf) , BUF_SIZE , fp);
+        fwrite((void *) buf , read_cnt , 1 , fp);
     }
 
-    puts("Received file data\n");
+    puts("Received file data");
     write(sd , "Thank you" , 10);
     fclose(fp);
     close(sd);
