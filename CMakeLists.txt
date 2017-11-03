@@ -3,5 +3,5 @@ project(Netword)
 
 set(CMAKE_C_STANDARD 11)
 
-set(SOURCE_FILES week7/halfclose/file_client.c)
+set(SOURCE_FILES week10/multiflexing/select.c)
 add_executable(Netword ${SOURCE_FILES})
